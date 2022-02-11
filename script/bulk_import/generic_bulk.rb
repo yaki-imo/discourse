@@ -26,7 +26,7 @@ class BulkImport::Generic < BulkImport::Base
     import_categories
     import_users
     import_user_emails
-    import_single_sign_on_records
+    #import_single_sign_on_records
     import_topics
     import_posts
     import_topic_allowed_users
@@ -84,7 +84,9 @@ class BulkImport::Generic < BulkImport::Base
         username: row["username"],
         email: row["email"],
         external_id: sso_record&.fetch("external_id"),
-        created_at: to_datetime(row["created_at"])
+        created_at: to_datetime(row["created_at"]),
+        admin: row["admin"],
+        moderator: row["moderator"]
       }
     end
   end
@@ -160,9 +162,11 @@ class BulkImport::Generic < BulkImport::Base
       ORDER BY ROWID
     SQL
 
+    added = 0
+
     create_topic_allowed_users(topics) do |row|
-      next unless topic_id = topic_id_from_imported_id(row["topic_id"])
-      imported_user_id = JSON.parse(row["private_message"])["user_ids"][0]
+      next unless topic_id = topic_id_from_imported_id(row["id"])
+      imported_user_id = JSON.parse(row["private_message"])["user_ids"].first
       user_id = user_id_from_imported_id(imported_user_id)
       added += 1
       {
