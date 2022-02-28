@@ -84,6 +84,7 @@ class BulkImport::Generic < BulkImport::Base
       {
         imported_id: row["id"],
         username: row["username"],
+        name: row["name"],
         email: row["email"],
         external_id: sso_record&.fetch("external_id"),
         created_at: to_datetime(row["created_at"]),
