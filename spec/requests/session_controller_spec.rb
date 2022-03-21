@@ -6,6 +6,9 @@ describe SessionController do
   let(:user) { Fabricate(:user) }
   let(:email_token) { Fabricate(:email_token, user: user) }
 
+  fab!(:admin) { Fabricate(:admin) }
+  let(:admin_email_token) { Fabricate(:email_token, user: admin) }
+
   shared_examples 'failed to continue local login' do
     it 'should return the right response' do
       expect(response).not_to be_successful
@@ -1490,6 +1493,55 @@ describe SessionController do
   end
 
   describe '#create' do
+    context 'read only mode' do
+      use_redis_snapshotting
+
+      before do
+        Discourse.enable_readonly_mode
+        EmailToken.confirm(email_token.token)
+        EmailToken.confirm(admin_email_token.token)
+      end
+
+      it 'prevents login by regular users' do
+        post "/session.json", params: {
+          login: user.username, password: 'myawesomepassword'
+        }
+        expect(response.status).not_to eq(200)
+      end
+
+      it 'prevents login by admins' do
+        post "/session.json", params: {
+          login: user.username, password: 'myawesomepassword'
+        }
+        expect(response.status).not_to eq(200)
+      end
+    end
+
+    context 'staff writes only mode' do
+      use_redis_snapshotting
+
+      before do
+        Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
+        EmailToken.confirm(email_token.token)
+        EmailToken.confirm(admin_email_token.token)
+      end
+
+      it 'allows admin login' do
+        post "/session.json", params: {
+          login: admin.username, password: 'myawesomepassword'
+        }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body['error']).not_to be_present
+      end
+
+      it 'prevents login by regular users' do
+        post "/session.json", params: {
+          login: user.username, password: 'myawesomepassword'
+        }
+        expect(response.status).not_to eq(200)
+      end
+    end
+
     context 'local login is disabled' do
       before do
         SiteSetting.enable_local_logins = false

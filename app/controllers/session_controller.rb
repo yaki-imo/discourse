@@ -10,6 +10,8 @@ class SessionController < ApplicationController
 
   requires_login only: [:second_factor_auth_show, :second_factor_auth_perform]
 
+  allow_in_staff_writes_only_mode :create
+
   ACTIVATE_USER_KEY = "activate_user"
 
   def csrf
@@ -319,7 +321,15 @@ class SessionController < ApplicationController
       return render(json: @second_factor_failure_payload)
     end
 
-    (user.active && user.email_confirmed?) ? login(user, second_factor_auth_result) : not_activated(user)
+    if user.active && user.email_confirmed?
+      if staff_writes_only_mode? ? user.staff? : true
+        login(user, second_factor_auth_result)
+      else
+        raise Discourse::ReadOnly.new
+      end
+    else
+      not_activated(user)
+    end
   end
 
   def email_login_info
