@@ -112,7 +112,7 @@
           icon="envelope"
           label="user.new_private_message"}}
       {{/if}}
-      {{#if (or viewingSelf currentUser.admin)}}
+      {{#if currentUser.admin}}
         {{bulk-select-toggle parentController="user-topics-list"}}
       {{/if}}
     {{/if}}
