@@ -469,11 +469,7 @@ td .main-link {
   margin-left: 0;
 }
 
-// work in progress for bulk select
-
-.sticky-header .topic-list-header {
-  z-index: 9;
-}
+// bulk select
 
 .topic-list-header {
   display: none;
@@ -481,6 +477,7 @@ td .main-link {
 
 .sticky-header {
   .topic-list-header {
+    z-index: z("base") + 2;
     display: table-header-group;
   }
   th {

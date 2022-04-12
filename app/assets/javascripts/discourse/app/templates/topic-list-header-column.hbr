@@ -5,6 +5,9 @@
     {{/if ~}}
     {{~#if bulkSelectEnabled}}
       <span class='bulk-select-topics'>
+        {{~#if view.site.mobileView}}
+          {{raw "flat-button" class="bulk-select" icon="list" title="topics.bulk.toggle"}}
+        {{/if~}}
         {{~#if canDoBulkActions}}
           <button class='btn btn-icon no-text bulk-select-actions'>{{d-icon "cog"}}&#8203;</button>
         {{/if ~}}
