@@ -8,8 +8,8 @@ import discourseComputed from "discourse-common/utils/decorators";
 import {
   extendedDefaultTimeShortcuts,
   hideDynamicTimeShortcuts,
-  TIME_SHORTCUT_TYPES,
   timeShortcuts,
+  TIME_SHORTCUT_TYPES,
 } from "discourse/lib/time-shortcut";
 
 export default Component.extend({
@@ -78,7 +78,7 @@ export default Component.extend({
         name: I18n.t(s.label),
         time: s.time,
         timeFormatted: s.timeFormatted,
-        icon: tf.icons,
+        icon: s.icons,
       };
     });
   },
