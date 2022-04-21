@@ -368,6 +368,24 @@ export function attachAdditionalPanel(name, toggle, transformAttrs) {
   additionalPanels.push({ name, toggle, transformAttrs });
 }
 
+createWidget("revamped-user-menu-wrapper", {
+  buildAttributes() {
+    return { "data-click-outside": true };
+  },
+
+  html() {
+    return [
+      new ComponentConnector(this, "user-menu-wrapper", {}, [], {
+        applyStyle: false,
+      }),
+    ];
+  },
+
+  clickOutside() {
+    this.sendWidgetAction("toggleUserMenu");
+  }
+});
+
 export default createWidget("header", {
   tagName: "header.d-header.clearfix",
   buildKey: () => `header`,
@@ -439,11 +457,7 @@ export default createWidget("header", {
         panels.push(this.attach("hamburger-menu"));
       } else if (state.userVisible) {
         if (this.siteSettings.enable_revamped_user_menu) {
-          panels.push(
-            new ComponentConnector(this, "user-menu-wrapper", {}, [], {
-              applyStyle: false,
-            })
-          );
+          panels.push(this.attach("revamped-user-menu-wrapper", {}));
         } else {
           panels.push(this.attach("user-menu"));
         }
