@@ -23,14 +23,14 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def execute
-    # import_categories
-    # import_users
-    # import_user_emails
-    #import_single_sign_on_records
-    # import_topics
-    # import_posts
-    # import_topic_allowed_users
-    # import_likes
+    import_categories
+    import_users
+    import_user_emails
+    import_single_sign_on_records
+    import_topics
+    import_posts
+    import_topic_allowed_users
+    import_likes
     import_user_stats
   end
 
@@ -154,7 +154,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_topic_allowed_users
-    puts "", "importing topic_allowed_users..."
+    puts "Importing topic_allowed_users..."
 
     topics = @db.execute(<<~SQL)
       SELECT ROWID, *
@@ -234,14 +234,23 @@ class BulkImport::Generic < BulkImport::Base
     puts "Importing user stats..."
 
     users = @db.execute(<<~SQL)
-        WITH posts_counts AS (SELECT COUNT(p.id) as count, p.user_id FROM posts p GROUP BY p.user_id),
-        topic_counts AS (SELECT COUNT(t.id) as count, t.user_id FROM topics t GROUP BY t.user_id),
-        first_post AS (SELECT MIN(p.created_at) as created_at, p.user_id FROM posts p GROUP BY p.user_id ORDER BY p.created_at ASC)
-        SELECT u.id as user_id, u.created_at, pc.count as posts, tc.count as topics, fp.created_at as first_post
-        FROM users u
-        JOIN posts_counts pc ON u.id = pc.user_id
-        JOIN topic_counts tc ON u.id = tc.user_id
-        JOIN first_post fp on u.id = fp.user_id
+      WITH posts_counts AS (
+        SELECT COUNT(p.id) AS count, p.user_id
+        FROM posts p GROUP BY p.user_id
+      ),
+      topic_counts AS (
+        SELECT COUNT(t.id) AS count, t.user_id
+        FROM topics t GROUP BY t.user_id
+      ),
+      first_post AS (
+        SELECT MIN(p.created_at) AS created_at, p.user_id
+        FROM posts p GROUP BY p.user_id ORDER BY p.created_at ASC
+      )
+      SELECT u.id AS user_id, u.created_at, pc.count AS posts, tc.count AS topics, fp.created_at AS first_post
+      FROM users u
+      JOIN posts_counts pc ON u.id = pc.user_id
+      JOIN topic_counts tc ON u.id = tc.user_id
+      JOIN first_post fp ON u.id = fp.user_id
     SQL
 
     create_user_stats(users) do |row|
@@ -255,7 +264,9 @@ class BulkImport::Generic < BulkImport::Base
       }
 
       likes_received = @db.execute(<<~SQL)
-        SELECT COUNT(l.id) as likes_received FROM likes l join posts p on l.post_id = p.id WHERE p.user_id = #{row["user_id"]}
+        SELECT COUNT(l.id) AS likes_received
+        FROM likes l JOIN posts p ON l.post_id = p.id
+        WHERE p.user_id = #{row["user_id"]}
       SQL
 
       if likes_received
@@ -263,7 +274,9 @@ class BulkImport::Generic < BulkImport::Base
       end
 
       likes_given = @db.execute(<<~SQL)
-        SELECT COUNT(l.id) as likes_given FROM likes l WHERE l.user_id = #{row["user_id"]}
+        SELECT COUNT(l.id) AS likes_given
+        FROM likes l
+        WHERE l.user_id = #{row["user_id"]}
       SQL
 
       if likes_given
