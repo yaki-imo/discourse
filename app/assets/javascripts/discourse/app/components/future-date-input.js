@@ -6,10 +6,10 @@ import I18n from "I18n";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 import discourseComputed from "discourse-common/utils/decorators";
 import {
+  TIME_SHORTCUT_TYPES,
   extendedDefaultTimeShortcuts,
   hideDynamicTimeShortcuts,
   timeShortcuts,
-  TIME_SHORTCUT_TYPES,
 } from "discourse/lib/time-shortcut";
 
 export default Component.extend({
@@ -78,7 +78,7 @@ export default Component.extend({
         name: I18n.t(s.label),
         time: s.time,
         timeFormatted: s.timeFormatted,
-        icon: s.icons,
+        icon: s.icon,
       };
     });
   },
