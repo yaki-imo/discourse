@@ -92,7 +92,7 @@
 
 .user-menu.revamped {
   right: 0;
-  width: unset;
+  width: 320px;
   padding: 0;
 
   .panel-body-bottom {
@@ -145,6 +145,14 @@
     width: 320px;
     padding: 0.75em 0.75em 0.75em 0.75em;
     justify-content: space-between;
+    box-sizing: border-box;
+
+    li {
+      span.double-user,
+      span.multi-user {
+        white-space: unset;
+      }
+    }
   }
 }
 
