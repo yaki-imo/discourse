@@ -32,6 +32,7 @@ class BulkImport::Generic < BulkImport::Base
     import_topic_allowed_users
     import_likes
     import_user_stats
+    import_tags
   end
 
   def import_categories
@@ -284,6 +285,37 @@ class BulkImport::Generic < BulkImport::Base
       end
 
       user
+    end
+  end
+
+
+  def import_tags
+    puts "", "Importing tags..."
+
+    tags =
+      @db.execute('SELECT id as topic_id, tags FROM topics').
+      map do |r|
+        next unless r['tags']
+        [ r['topic_id'], JSON.parse(r['tags']).uniq ]
+      end.compact
+
+    tag_mapping = {}
+
+    tags.map(&:last).flatten.compact.uniq.each do |tag_name|
+      cleaned_tag_name = DiscourseTagging.clean_tag(tag_name)
+      tag = Tag.find_by_name(cleaned_tag_name) || Tag.create!(name: cleaned_tag_name)
+      tag_mapping[tag_name] = tag.id
+    end
+
+    tags_disaggregated = tags.map{|topic_id, tags| tags.map{|t| { topic_id: topic_id, tag_id: tag_mapping.fetch(t) }}}.flatten
+
+    create_topic_tags(tags_disaggregated) do |row|
+      next unless topic_id = topic_id_from_imported_id(row[:topic_id])
+
+      {
+        topic_id: topic_id,
+        tag_id: row[:tag_id],
+      }
     end
   end
 
