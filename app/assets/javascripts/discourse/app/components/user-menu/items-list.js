@@ -44,13 +44,18 @@ export default class UserMenuNotificationsList extends GlimmerComponent {
       cacheKey += `-type-${this.filterByType}`;
     }
 
-    return this.store.findStale("notification", params, { cacheKey }).refresh();
+    return this.store
+      .findStale("notification", params, { cacheKey })
+      .refresh()
+      .then((c) => {
+        return c.content;
+      });
   }
 
   _load() {
     this.loading = true;
     this.fetchItems()
-      .then((items) => (this.items = items.content))
+      .then((items) => (this.items = items))
       .finally(() => (this.loading = false));
   }
 

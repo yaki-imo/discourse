@@ -387,8 +387,6 @@ const SiteHeaderComponent = MountWidget.extend(
             panel.style.setProperty("top", "100%");
             panel.style.setProperty("height", "auto");
           }
-
-          document.body.classList.add("drop-down-mode");
         } else {
           if (this.site.mobileView) {
             headerCloak.style.display = "block";
@@ -426,7 +424,6 @@ const SiteHeaderComponent = MountWidget.extend(
               headerCloak.style.top = `${menuTop}px`;
             }
           }
-          document.body.classList.remove("drop-down-mode");
         }
 
         // TODO: handle this better???
@@ -444,6 +441,7 @@ const SiteHeaderComponent = MountWidget.extend(
 
 export default SiteHeaderComponent.extend({
   classNames: ["d-header-wrap"],
+  classNameBindings: ["site.mobileView::drop-down-mode"],
 });
 
 export function headerTop() {
