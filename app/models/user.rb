@@ -685,6 +685,7 @@ class User < ActiveRecord::Base
 
     if SiteSetting.enable_revamped_user_menu
       payload[:all_unread_notifications] = all_unread_notifications
+      payload[:grouped_unread_high_priority_notifications] = grouped_unread_high_priority_notifications
     end
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
