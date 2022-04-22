@@ -3,7 +3,8 @@ import I18n from "I18n";
 
 export default class UserMenuReviewableItem extends GlimmerComponent {
   get actor() {
-    const flagger = this.args.reviewable.flagger_username;
+    const reviewable = this.args.item;
+    const flagger = reviewable.flagger_username;
     if (flagger) {
       return flagger;
     } else {
@@ -12,8 +13,9 @@ export default class UserMenuReviewableItem extends GlimmerComponent {
   }
 
   get description() {
+    const reviewable = this.args.item;
     return I18n.t("user_menu.reviewable.default_item", {
-      reviewable_id: this.args.reviewable.id,
+      reviewable_id: reviewable.id,
     });
   }
 

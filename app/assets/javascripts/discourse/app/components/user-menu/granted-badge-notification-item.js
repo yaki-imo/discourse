@@ -3,7 +3,7 @@ import getURL from "discourse-common/lib/get-url";
 
 export default class UserMenuGrantedBadgeNotificationItem extends UserMenuDefaultNotificationItem {
   get url() {
-    const notification = this.args.notification;
+    const notification = this.args.item;
     const data = notification.data;
     const badgeId = data.badge_id;
     if (badgeId) {

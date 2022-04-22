@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import I18n from "I18n";
 
-export default class UserMenuNotificationsList extends GlimmerComponent {
+export default class UserMenuItemsList extends GlimmerComponent {
   @tracked loading = false;
   @tracked items = [];
 
@@ -12,44 +12,28 @@ export default class UserMenuNotificationsList extends GlimmerComponent {
     this._load();
   }
 
-  get filterByType() {
-    return null;
+  get showAll() {
+    return false;
   }
 
   get showAllHref() {
-    return `${this.currentUser.path}/notifications`;
+    throw new Error(
+      `the showAllHref getter must be implemented in ${this.constructor.name}`
+    );
   }
 
-  get showAllTitle() {
-    return I18n.t("user_menu.view_all_notifications");
-  }
-
-  get dismissTitle() {
-    return I18n.t("user.dismiss_notifications_tooltip");
-  }
+  get showAllTitle() {}
 
   get showDismiss() {
-    return this.items.some((item) => !item.read);
+    return false;
   }
 
-  fetchItems() {
-    const params = {
-      recent: true,
-      silent: this.currentUser.enforcedSecondFactor,
-      limit: 30,
-    };
-    let cacheKey = "recent-notifications";
-    if (this.filterByType) {
-      params.filter_by_type = this.filterByType;
-      cacheKey += `-type-${this.filterByType}`;
-    }
+  get dismissTitle() {}
 
-    return this.store
-      .findStale("notification", params, { cacheKey })
-      .refresh()
-      .then((c) => {
-        return c.content;
-      });
+  fetchItems() {
+    throw new Error(
+      `the fetchItems method must be implemented in ${this.constructor.name}`
+    );
   }
 
   _load() {
@@ -61,6 +45,7 @@ export default class UserMenuNotificationsList extends GlimmerComponent {
 
   @action
   dismissButtonClick() {
+    // TODO do something
     console.log("do something");
   }
 }

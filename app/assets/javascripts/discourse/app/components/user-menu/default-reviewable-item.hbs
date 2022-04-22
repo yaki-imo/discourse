@@ -1,5 +1,5 @@
-<li class={{if @reviewable.pending "pending"}}>
-  {{#link-to "review.show" @reviewable.id}}
+<li class={{if @item.pending "pending"}}>
+  {{#link-to "review.show" @item.id}}
     {{d-icon this.icon}}
     <div>
       <span>{{this.actor}}</span>

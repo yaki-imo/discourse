@@ -3,12 +3,12 @@ import { formatUsername } from "discourse/lib/utilities";
 
 export default class UserMenuDefaultNotificationItem extends GlimmerComponent {
   get notificationName() {
-    const notification = this.args.notification;
+    const notification = this.args.item;
     return this.site.notificationLookup[notification.notification_type];
   }
 
   get data() {
-    return this.args.notification.data;
+    return this.args.item.data;
   }
 
   get username() {
@@ -16,7 +16,7 @@ export default class UserMenuDefaultNotificationItem extends GlimmerComponent {
   }
 
   get fancyTitle() {
-    return this.args.notification.fancy_title;
+    return this.args.item.fancy_title;
   }
 
   get topicTitle() {
@@ -24,7 +24,7 @@ export default class UserMenuDefaultNotificationItem extends GlimmerComponent {
   }
 
   get topicId() {
-    return this.args.notification.topic_id;
+    return this.args.item.topic_id;
   }
 
   get groupName() {

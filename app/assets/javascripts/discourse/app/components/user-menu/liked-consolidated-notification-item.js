@@ -5,7 +5,7 @@ export default class UserMenuLikedConsolidatedNotificationItem extends UserMenuD
   get url() {
     return userPath(
       `${
-        this.args.notification.username || this.currentUser.username
+        this.args.item.username || this.currentUser.username
       }/notifications/likes-received?acting_username=${this.data.username}`
     );
   }

@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action, computed } from "@ember/object";
 
 const DefaultTabId = "all-notifications";
-const DefaultPanelComponent = "user-menu/items-list";
+const DefaultPanelComponent = "user-menu/notifications-list";
 
 export default class UserMenu extends GlimmerComponent {
   @tracked currentTabId = DefaultTabId;

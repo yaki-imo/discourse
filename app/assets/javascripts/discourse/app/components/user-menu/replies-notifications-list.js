@@ -1,6 +1,6 @@
-import UserMenuItemsList from "discourse/components/user-menu/items-list";
+import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
 
-export default class UserMenuRepliesNotificationsList extends UserMenuItemsList {
+export default class UserMenuRepliesNotificationsList extends UserMenuNotificationsList {
   get filterByType() {
     return "replied";
   }

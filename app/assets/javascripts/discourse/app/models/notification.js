@@ -15,6 +15,7 @@ function coreComponentForType() {
   };
 }
 
+const DefaultItem = "user-menu/default-notification-item";
 let _componentForType = coreComponentForType();
 
 export function registerCustomComponentForType(notificationType, component) {
@@ -28,7 +29,8 @@ export function resetComponentForType() {
 export default RestModel.extend({
   @discourseComputed("notification_type")
   userMenuComponent(notificationType) {
-    const name = this.site.notificationLookup[notificationType];
-    return _componentForType[name];
+    const component =
+      _componentForType[this.site.notificationLookup[notificationType]];
+    return component || DefaultItem;
   },
 });
